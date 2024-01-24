@@ -189,7 +189,7 @@ Dockerコンテナ内では以下の手順で取得できるようにできる�
 docker exec -it pds sh
 ```
 
-1. /`app/node_modules/@atproto/pds/dist/index.js` を v`i` で開く
+1. `/app/node_modules/@atproto/pds/dist/index.js` を `vi` で開く
 2. reservedHandle 一覧があるので検索
 3. 利用したいハンドルをコメントアウト
 4. コンテナを再起動
