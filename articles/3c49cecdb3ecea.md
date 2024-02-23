@@ -1,5 +1,5 @@
 ---
-title: "BlueskyのPDSを建てる (v1.3.3)"
+title: "BlueskyのPDSを建てる (0.3.0-beta)"
 emoji: "🦋"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: [bluesky]
@@ -175,7 +175,7 @@ PDSのバージョンは [/xrpc/_health](https://bsky.social/xrpc/_health) で�
 
 # カスタマイズ
 
-# システム予約済みハンドルを取得する
+## システム予約済みハンドルを取得する
 
 システムで予約されているハンドルが結構ある。過去の荒らしによる影響。
 
