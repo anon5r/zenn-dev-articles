@@ -10,14 +10,14 @@ published: true
 
 
 度々の話題になっているBlueskyに招待してもらい、約9ヵ月ほど。
-自身で関連アプリを作ったりもしたが、いまさらになってPDSを建ててみたのでそのメモを残す。
+自身で関連アプリを作ったりもしたが、いまさらになってPDSを建ててみたのでそのメモを残しておきます。
 
-以前よりもドキュメントや初期設定も整備され、建てるだけならすぐにできるようになっている。
+以前よりもドキュメントや初期設定も整備され、建てるだけならすぐにできるようになっています。
 
 # サーバーを準備
 
-手頃なサーバーを準備。何でも良いが、公式のドキュメントに沿うならOSはUbuntu 22.x。
-また、このスペックを求めるとRaspberry Piでの運用は厳しい。
+手頃なサーバーを準備します。何でも良いですが、公式のドキュメントに沿うならOSはUbuntu 22.xを使用します。
+またこのスペックを求めると ~~Raspberry Pi 4での運用は厳しいかもしれない~~ Raspberry Pi 5なら満たせそうです。
 
 
 | 項目 | 性能 |
@@ -28,7 +28,8 @@ published: true
 
 #### 所感
 
-お一人様運用、フォローの少ないほぼ初期状態で動かしている場合、最低でも以下のスペックでもいけそう。サンドボックスで検証環境として動かすだけなら良さそう。
+お一人様運用あるいはフォローの少ないほぼ初期状態で動かしている場合、最低でも以下のスペックでもいけるかも。
+サンドボックスで検証環境として動かすだけなら良いかもしれません。これはサンドボックス環境で一つだけアカウントがある実行時からみたスペックです。
 
 | 項目 | 性能 |
 | ---- | ------------------- |
@@ -38,41 +39,45 @@ published: true
 
 ## SMTPサーバー
 
-SMTPは自前で持ちたくないので [Mailgun](https://mailgun.com) を使用。
+SMTPは自前で持ちたくないので [Mailgun](https://mailgun.com) を使用します。
 
-Gmail、[Mailtrap](https://mailtrap.io)、[MailerSend](https://www.mailersend.com/)、[Sendgrid](https://sendgrid.kke.co.jp)、[AWS SES](https://aws.amazon.com/jp/ses/)（無料枠が1年のみ、制限が厳しくなった、従量）でもSMTPが使えれば何でも良い。
+Gmail、[Mailtrap](https://mailtrap.io)、[MailerSend](https://www.mailersend.com/)、[Sendgrid](https://sendgrid.kke.co.jp)、[AWS SES](https://aws.amazon.com/jp/ses/)（無料枠が1年のみ、制限が厳しくなった、従量）でもSMTPが使えれば何でもいいです。
+
 
 ## データベース
 
-デフォルトだとSQLiteで動作。今回はPostgreSQLを使用。
+デフォルトだとSQLiteで実行しますが、今回はPostgreSQLを使用します。
 
 ## DNS
 
-結構重要。 今回は[Cloudflare](https://cloudflare.com)を使用。レコード設定は以下の分を準備。
+結構重要になります。 今回は[Cloudflare](https://cloudflare.com)を使用しました。レコード設定は、以下記載の分を準備します。
 
 ### PDS用
 
-- PDSを動かすための主ドメイン bsky.social相当。
-- [/xrpc/com.atproto.server.describeServer](https://bsky.social/xrpc/com.atproto.server.describeServer) などのAPIが動作できるようにする
+- PDSを動かすための主ドメイン `bsky.social` 相当。
+- [/xrpc/com.atproto.server.describeServer](https://bsky.social/xrpc/com.atproto.server.describeServer) などのAPIが動作できるようにする必要があります。
 
 ### ハンドル用
 
-- ::ハンドル用に名前解決できる必要がある::。ワイルドカードで受け付けられる必要がある。
-- PDS用と同一にする必要はない。
+- **ハンドル用にとして使用しますが、DNSで名前解決できる必要があります**。そのため、ワイルドカードで受け付けられる必要があります。
 - `*.bsky.soial`、`*.bsky.name` など。
+- ちなみに、上記のPDS用 と同一にする必要はないようです。
+  - イレギュラーですが、例えばPDSを `mypds.example` 、ハンドルを `.handle.example` とすることも、仕様上は可能です。
 
 ### Cloudflareでの運用上の注意
 
-Cloudfareで利用する場合、CDNを有効にした際の[無料のUniversalSSL証明書での扱いは注意が必要](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/total-tls/error-messages/)である。
-UniversalSSL証明書がカバーする範囲はAPEX(`example.com`)およびサブドメイン（`*.example.com`）までである。 `*.foo.example.com`といった2階層目。以降のサブドメインには有効にならない。
+Cloudflareで利用する場合、CDNを有効にした際の[無料のUniversalSSL証明書での扱いは注意が必要](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/total-tls/error-messages/)です。
+UniversalSSL証明書がカバーする範囲はAPEX(`example.com`)およびサブドメイン（`*.example.com`）までとなります。 `*.foo.example.com`といった2階層目以降のサブドメインにはUniversal証明書は有効になりません。
 
-上記によりハンドルをサブドメイン以降で運用する場合、ハンドルへの問い合わせに対してはCDN経由で有効にできない可能性があることに注意する。
+上記仕様のため、ハンドルを2階層以降のサブドメインで運用する場合、ハンドルへの問い合わせに対してはCDN経由で有効にできない可能性があります。
+
+あるいは、有償のAdvanced、または証明書持ち込みのCustomを選択する事で解決できるかもしれません。
 
 # インストール
 
-基本的に[ドキュメント](https://github.com/bluesky-social/pds/blob/main/README.md)に沿ってコピペ実行で動作環境は作成できる。
+基本的に[ドキュメント](https://github.com/bluesky-social/pds/blob/main/README.md)に沿って、コマンドラインからコマンド実行で動作環境は作成できます。
 
-[ドキュメント内にもある](https://github.com/bluesky-social/pds/blob/main/README.md#automatic-install-on-ubuntu-20042204-or-debian-1112)ように、以下のようにインストーラーを利用して実行することもできる。
+[ドキュメント内にもある](https://github.com/bluesky-social/pds/blob/main/README.md#automatic-install-on-ubuntu-20042204-or-debian-1112)ように、以下のようにインストーラー(`./installer.sh`)を利用して実行するとスムーズです。
 
 ```yaml
 wget https://raw.githubusercontent.com/bluesky-social/pds/main/installer.sh
@@ -86,11 +91,11 @@ cd pds
 sudo bash ./installer.sh
 ```
 
-途中、`$PDS_ADMIN_PASSWORD` を生成するが、これは管理APIを使用する際（管理者権限による招待コードの発行など）に必要なので管理、取り扱いに注意すること。
+途中、`$PDS_ADMIN_PASSWORD` を生成しますが、これは管理APIを使用する際（管理者権限による招待コードの発行など）に必要なので管理、取り扱いに注意が必要です。
 
 ## PDSのエントリポイントホスト名を設定する
 
-PDSのホスト名。アカウント作成時に指定する。また各ハンドルのPDS問い合わせ先として使用される。
+PDSのホスト名を指定します。またPDS内の各ハンドルがどのPDSに所属しているかの問い合わせ先として使用されます。
 
 ```shell
 PDS_HOSTNAME=entry.example.local
@@ -143,13 +148,14 @@ services:
       retries: 20
 ```
 
-pds.envでDBを指定する。SQLiteが指定されている行を削除またはコメントアウト。::PGSQLとSQLiteの設定が同居している場合、同担不可の警告が表示される::。
+pds.envでDBを指定します。SQLiteが指定されている行を削除またはコメントアウト。
+**PGSQLとSQLiteの設定が同居している場合、同担不可の警告が表示されます**。
 
 ```shell
 #PDS_DB_SQLITE_LOCATION=/pds/pds.sqlite
 ```
 
-PostgreSQLを指定。接続先は `network_mode: host` で実行してる場合は`localhost`を指定。
+PostgreSQLを指定します。接続先は `network_mode: host` で実行してる場合は`localhost`を指定すればOK。
 
 ```shell
 PDS_DB_POSTGRES_URL=postgres://postgres:pgpassword@localhost/pds
@@ -157,34 +163,43 @@ PDS_DB_POSTGRES_URL=postgres://postgres:pgpassword@localhost/pds
 
 ## メール送信に対応する
 
-`pds.env` をアップデートし、SMTPサーバーの指定を追加する
+`pds.env` をアップデートし、SMTPサーバーの指定を追加します
 
 ```shell
 SMTP_USERNAME=smtp-user
-  SMTP_PASSWORD=smtp-password
+SMTP_PASSWORD=smtp-password
 ```
 
-さらに、`PDS_EMAIL_SMTP_URL` にSMTPサーバーへの接続をURIで記述する。下記の例では[Mailgun](https://mailgun.com)を使用している。
+さらに、`PDS_EMAIL_SMTP_URL` にSMTPサーバーへの接続をURIで記述します。下記の例では[Mailgun](https://mailgun.com)を使用しています。ほかのプロバイダを使用する場合は適宜読み替えてください。
 
 ```shell
-PDS_EMAIL_SMTP_URL=smtps://$SMTP_USERNAME:$SMTP_PASSWORD@smtp.mailgun.org
+PDS_EMAIL_SMTP_URL=smtps://${SMTP_USERNAME}:${SMTP_PASSWORD}@smtp.mailgun.org
 ```
 
-なお、Mailgunではユーザー名に `user@example.com` 形式のフォーマットを使用するため、`$SMTP_USERNAME` に指定する際は `@` を `%40` に置換して記述すること。 例 `user%40example.com`
+なお、Mailgunではユーザー名に `user@example.com` 形式のフォーマットを使用するため、`$SMTP_USERNAME` に指定するユーザー名は `@` を `%40` に置換して記述する必要があります。
+
+例 `user%40example.com`
+
 
 #### PDS 0.3.0-beta.3 ではメールアドレス検証は利用できない
 
-PDSのバージョンは [/xrpc/_health](https://bsky.social/xrpc/_health) で確認できる。
+ただし、PDS 0.3.0-beta3 ではまだメールアドレス検証のメソッドが実装されていません。
+
+利用中のPDSのバージョンは [/xrpc/_health](https://bsky.social/xrpc/_health) で確認できます。
 
 # カスタマイズ
 
 ## システム予約済みハンドルを取得する
 
-システムで予約されているハンドルが結構ある。過去の荒らしによる影響。
+この項目はおまけなので分からない方は避けてください。
+システムで予約されているハンドルが結構あります。これは過去に著名な組織や公式の名を騙ったハンドルを取得し、売買しようとした荒らしによる影響があります。
 
-自分のハンドルも **anon** なので Anonymous Trolling 対策で予約されている。
+自分のハンドルも **anon** なのですが、 Anonymous Trolling 対策として予約されています。
 
-Dockerコンテナ内では以下の手順で取得できるようにできる。
+これらはコード内にハードコードされているため、基本的に無効化できません。
+ただし、PDSを実行しているDockerコンテナ内でに入り、当該部分を直接編集する事でこれを回避する事ができます。
+
+例えば、以下の手順です。
 
 1. コンテナにログインする
 
@@ -203,17 +218,18 @@ docker compose restart pds
 
 ## PDSのハンドルで利用可能なサフィックスドメインを複数指定する
 
-`$PDS_HOSTNAME` と同一である必要はない。また、仕様上は複数のデフォルトサフィックスを設定できる。
+先述の通り、PDSのドメイン `$PDS_HOSTNAME` と同一である必要はありません。
+また、仕様上は複数のデフォルトサフィックスを設定できるようにもなっています。
 
 ```shell
 PDS_SERVICE_HANDLE_DOMAINS=".example.test,.foo.test,.bar.test,.baz.tes,.qux.test"
 ```
 
-ただし[Blueskyアプリ](https://bsky.app)を含め、ユーザー登録画面や登録処理では現在のところ先頭のサフィックスドメインが使用され、残りのものについては選択することができない。
+ただし[Blueskyアプリ](https://bsky.app)を含め、ユーザー登録画面や登録処理では現在のところ先頭のサフィックスドメインが使用され、残りのものについては選択、設定するUIもないため事実上設定できなくなっています。
 
 ## 利用規約、プライバシーポリシーを設置する
 
-別途利用規約、プライバシーポリシーを掲げる場合、以下のパラメータに設定すると、新規アカウント登録ページでリンクが表示される。
+各PDSでそれぞれ利用規約、プライバシーポリシーを掲げる場合、以下のパラメータに設定すると、新規アカウント登録ページでリンクが表示されます。
 
 ```shell
 PDS_TERMS_OF_SERVICE_URL=https://blueskyweb.xyz/support/tos
@@ -224,24 +240,25 @@ PDS_PRIVACY_POLICY_URL=https://blueskyweb.xyz/support/privacy-policy
 
 ## 招待コードの有無、発行スケジュールを調整する
 
-PDS登録時に招待コードの有無を設定するのは以下のフラグ。デフォルトは有効。
+PDS登録時に招待コードの必要可否を設定するには以下のフラグで設定します。デフォルトはこの項目がなくても招待コードが必要になっています。
 
 ```shell
 PDS_INVITE_REQUIRED=true
 ```
 
-`false` にすると招待コード無しで登録可能。
+`false` にすると招待コード無しで登録可能になる。
 
-招待コードの発行間隔は以下のパラメータで設定。値はミリ秒。デフォルトは1週間(`604800000`)。
+招待コードの発行間隔は以下のパラメータで設定できます。
+値の単位はミリ秒。デフォルトは1週間(`604800000`)になっています。
 
 ```shell
 PDS_INVITE_INTERVAL=604800000
 ```
-
+例えば
 - 毎日1つ発行したい場合 1 day = 24 hrs = 86400 sec =  `86400000` msec
 - bsky.social と同じにする場合 10 days = 240 hrs = 864000 sec = `864000000` msec
 
-## PDSの公開されている設定状態を確認する
+## PDSの状態を確認する
 
-`/xrpc/com.atproto.server.describeServer` にGETでリクエストを投げると設定されている情報が表示される
+`/xrpc/com.atproto.server.describeServer` にGETでリクエストを送信すると、設定されているPDSの情報がJSONで取得できます。
 
