@@ -9,7 +9,7 @@
 プロジェクトページで以下を実行
 
 ```shell
-$ yarn
+$ yarn install
 ```
 
 その他インストール方法はZennによる [Zenn CLIをインストールする](https://zenn.dev/zenn/articles/install-zenn-cli) などを確認してください。
@@ -20,18 +20,18 @@ $ yarn
 以下のコマンドを使用し、テンプレートを生成
 
 ```shell
-$ npx zenn new:article
+$ yarn new:article
 ```
 
 記事URLにslugを指定する場合は以下の様にする
 
 ```shell
-$ npx zenn new:article --slug 記事のスラッグ --title 記事のタイトル --type tech
+$ yarn new:article --slug 記事のスラッグ --title 記事のタイトル --type tech
 ```
 
 # 記事のプレビュー
 
 ```shell
-$ npx zenn preview
+$ yarn preview
 ```
 
