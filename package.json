@@ -1,8 +1,12 @@
 {
   "scripts": {
+    "init": "zenn init",
     "preview": "zenn preview",
     "new:article": "zenn new:article",
-    "new:book": "zenn new:book"
+    "new:book": "zenn new:book",
+    "list:article": "zenn list:article",
+    "list:book": "zenn list:book",
+    "zenn": "zenn"
   },
   "dependencies": {
     "zenn-cli": "^0.1.158"
